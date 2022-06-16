@@ -28,5 +28,6 @@ employee map(items,index)->
 )]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="31a97aa7-f254-45a6-b44d-60cdb6840569" message="END LOG- fetch all emp info flow is completed"/>
 	</flow>
 </mule>
