@@ -14,7 +14,7 @@ http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/
 	</db:config>
 	<flow name="employee-apiFlow" doc:id="62e63a9e-900e-40bc-b3de-3ddba229f6b3" >
 		<http:listener doc:name="Listener" doc:id="8c8ebe7d-f9f3-41d6-9a7e-52c05e8c6960" config-ref="HTTP_Listener_config" path="insert-empdata" allowedMethods="POST"/>
-		<logger level="INFO" doc:name="Start Log" doc:id="cd4b8dd4-ab3a-4c56-8afd-1f7ee6a44227" message="The input data received is : #[payload]"/>
+		<logger level="INFO" doc:name="Start Log" doc:id="cd4b8dd4-ab3a-4c56-8afd-1f7ee6a44227" message="Received the input data : #[payload]"/>
 		<db:insert doc:name="Insert" doc:id="cab4adca-23fa-4cb5-a5af-429853eed3b3" config-ref="Database_Config">
 			<db:sql ><![CDATA[insert into employee_details values(:eid,:ename,:des,:sal)]]></db:sql>
 			<db:input-parameters ><![CDATA[#[{
