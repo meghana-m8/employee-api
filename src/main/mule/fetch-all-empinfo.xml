@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="fetch-all-empinfoFlow" doc:id="08df1e31-8c83-4ad8-8a73-22585c63c52d" >
+		<http:listener doc:name="Listener" doc:id="61aacf69-83c4-4f65-89e1-d16247184d89" config-ref="HTTP_Listener_config" path="/fetch-all-empinfo" allowedMethods="GET"/>
+		<db:select doc:name="Select" doc:id="f49983d3-2df3-4768-88cd-951dfda40cfb" config-ref="Database_Config">
+			<db:sql ><![CDATA[select * from employee_details]]></db:sql>
+		</db:select>
+		<ee:transform doc:name="Transform Message" doc:id="dfcda524-3a57-4e93-85f0-d0c890f954ab" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var employee=payload map ( payload01 , indexOfPayload01 ) -> {
+	empid: payload01.empid,
+	empname: payload01.empname,
+	designation: payload01.empdesignation,
+	empsal: payload01.empsalary
+}
+---
+employee map(items,index)->
+(
+	items mapObject((upper($$)):$)
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

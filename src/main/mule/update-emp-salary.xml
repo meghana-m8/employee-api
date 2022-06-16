@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:db="http://www.mulesoft.org/schema/mule/db"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/db http://www.mulesoft.org/schema/mule/db/current/mule-db.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="update-emp-salaryFlow" doc:id="1ed8e58e-184d-4f66-b228-d6e7e3ef55bd" >
+		<http:listener doc:name="Listener" doc:id="4dedcd15-76f4-4b18-b5f0-7396d41df32f" config-ref="HTTP_Listener_config" path="update-emp-salary" allowedMethods="PUT"/>
+		<logger level="INFO" doc:name="Start Log" doc:id="d73a0e25-928c-4b87-abc3-8a14b66dc97a" message="Received the input data :#[payload]"/>
+		<db:update doc:name="Update" doc:id="a9cc904a-f5af-427c-b699-b5b54e02ec4a" config-ref="Database_Config">
+			<db:sql ><![CDATA[update employee_details set empsalary=:sal where empid=:eid]]></db:sql>
+			<db:input-parameters ><![CDATA[#[{
+	eid:payload.empInfo.empId,
+	sal:payload.empInfo.salary
+}]]]></db:input-parameters>
+		</db:update>
+		<ee:transform doc:name="Transform Message" doc:id="4924e8d4-6688-421e-8452-62c87f15875c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"status":200,
+	"message":"successfully update the employee salary"
+	}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
